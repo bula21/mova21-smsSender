@@ -43,3 +43,10 @@ a {
     color: inherit;
     text-decoration: none;
 }
+
+.profile {
+    position: absolute;
+    top: 1%;
+    right: 2%;
+    text-align: right;
+}

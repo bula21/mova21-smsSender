@@ -1,7 +1,8 @@
 import Head from 'next/head'
 import styles from './index.module.css'
 
-import Send from '../components/sender/send'
+import Send from '../components/send'
+import LoginButton from '../components/loginButton'
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       </Head>
 
       <main>
+        <LoginButton/>
         <h1 className={styles.title}>
           SMS Sender
         </h1>
@@ -27,3 +29,5 @@ export default function Home() {
     </div>
   )
 }
+
+Home.auth = true
