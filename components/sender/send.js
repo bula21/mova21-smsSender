@@ -1,52 +1,58 @@
 import { useState } from 'react';
 
 export default function Send() {
-    const MAX_LENGTH = 160;
+    const MAX_LENGTH = 160 - 27; // for sponsored by
+    const MAX_LENGTH_RECIPIENTS = 250;
 
-    const [phonenumber, setPhonenumber] = useState('');
+    const [phonenumbers, setPhonenumbers] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const [result, setResult] = useState('');
 
     const handleSubmit = async (event) => {
-        event.preventDefault()
+        if (phonenumbers.split(',').length < MAX_LENGTH_RECIPIENTS) {
+            event.preventDefault()
 
-        const data = {
-            phonenumber: phonenumber,
-            message: message,
-        }
-        const JSONdata = JSON.stringify(data)
-        const endpoint = '/api/send'
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSONdata,
-        }
-
-        try {
-            const response = await fetch(endpoint, options)
-            const json = await response.json()
-            if (json.response === 'success') {
-                setError(false)
-                setResult('Message sent!')
-
-                setPhonenumber('')
-                setMessage('')
-            } else {
-                setError(true)
-                setResult('Error sending message!')
+            const data = {
+                phonenumbers: phonenumbers,
+                message: message,
             }
-        } catch (error) {
-            console.log(error)
+            const JSONdata = JSON.stringify(data)
+            const endpoint = '/api/send'
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSONdata,
+            }
+
+            try {
+                const response = await fetch(endpoint, options)
+                const json = await response.json()
+                if (json.response === 'success') {
+                    setError(false)
+                    setResult('Message sent!')
+
+                    setPhonenumbers('')
+                    setMessage('')
+                } else {
+                    setError(true)
+                    setResult('Error sending message!')
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        } else {
+            setError(true)
+            setResult('Error too many Recepients max allowed ' + MAX_LENGTH_RECIPIENTS + '!')
         }
     }
 
     const onChange = (event) => {
         const { name, value } = event.target
-        if (name === 'phonenumber') {
-            setPhonenumber(value)
+        if (name === 'phonenumbers') {
+            setPhonenumbers(value)
         } else if (name === 'message') {
             setMessage(value)
         }
@@ -60,8 +66,8 @@ export default function Send() {
             <div className="row">
                 <form onSubmit={handleSubmit}>
                     <div className="form-group mt-2">
-                        <label htmlFor="phonenumber" >Phone Number</label>
-                        <input type="tel" id="phonenumber" className="form-control" name="phonenumber" placeholder="Please provide Phonenumber" value={phonenumber} onChange={onChange} required />
+                        <label htmlFor="phonenumbers" >Phone Numbers (comma separated)</label>
+                        <input type="tel" id="phonenumbers" className="form-control" name="phonenumbers" placeholder="Please provide Phonenumbers" value={phonenumbers} onChange={onChange} required />
                     </div>
                     <div className="form-group mt-3">
                         <label htmlFor="message">Message</label>

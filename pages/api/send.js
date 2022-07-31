@@ -7,6 +7,11 @@ const SMTP_PORT = process.env.SMTP_PORT
 
 const SMS_DOMAIN = process.env.SMS_DOMAIN
 
+const SPONSORED_BY = process.env.SPONSORED_BY
+
+const MAX_LENGTH = 160
+const MAX_LENGTH_RECIPIENTS = 250
+
 export default function handler(req, res) {
   const transporter = nodemailer.createTransport({
     port: SMTP_PORT,
@@ -19,21 +24,23 @@ export default function handler(req, res) {
   })
 
   const body = req.body
-  let phonenumber = body.phonenumber
+  let phonenumbers = body.phonenumbers
   let message = body.message
 
-  console.log('Info: Body - Phonenumber: ', phonenumber + ', Message: ', message)
+  console.log('Info: Body - phonenumbers: ', phonenumbers + ', Message: ', message)
 
-  if (!phonenumber || !message) return res.status(400).json({ response: 'error', message: 'Please provide correct Phonenumber and Message' })
+  if (!phonenumbers || !message) return res.status(400).json({ response: 'error', message: 'Please provide correct phonenumbers and Message' })
 
-  if (message.length >= 160) return res.status(400).json({ response: 'error', message: 'Message is too long' })
+  if (message.length >= MAX_LENGTH - SPONSORED_BY.length) return res.status(400).json({ response: 'error', message: 'Message is too long' })
+  if (phonenumbers.split(',').length >= MAX_LENGTH_RECIPIENTS) return res.status(400).json({ response: 'error', message: 'Too many phonenumbers' })
 
-  phonenumber = phonenumber + "@" + SMS_DOMAIN
+  phonenumbers = phonenumbers.split(',')
+  phonenumbers = phonenumbers.map(number => `${number}@${SMS_DOMAIN}`)
   const mailData = {
     from: SMTP_USER,
     to: "james.levell@bula21.ch",
     subject: "",
-    text: message
+    text: message + " - " + SPONSORED_BY,
   }
 
   transporter.sendMail(mailData, function (err, info) {

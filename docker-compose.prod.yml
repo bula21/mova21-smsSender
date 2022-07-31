@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  smssender:
+    image: ghcr.io/bula21/mova21-smssender/smssender:latest
+    environment:
+      NODE_ENV: production
+      SMTP_USER: /run/secrets/SMTP_USER
+      SMTP_PASSWORD: /run/secrets/SMTP_PASSWORD
+      SMTP_HOST: smtp.office365.com
+      SMTP_PORT: 587
+      SMS_DOMAIN: swissphone-gateway.com
+      SPONSORED_BY: SMS sponsored by Swissphone
+    secrets:
+      - SMTP_USER
+      - SMTP_PASSWORD
+
+secrets:
+  SMTP_USER:
+    external: true
+  SMTP_PASSWORD:
+    external: true

@@ -1,0 +1,50 @@
+name: Publish docker images
+
+on:
+  # Trigger the workflow on push
+  # but only for the master branch
+  push:
+    branches:
+      - master
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  push_to_registry:
+    name: Push docker images to GitHub Packages
+    runs-on: ubuntu-latest
+
+    steps:
+      -
+        name: Check out the repo
+        uses: actions/checkout@v3
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Build docker
+        uses: docker/build-push-action@v3
+        with:
+          target: smssender-deploy
+          load: true
+          tags: |
+            ghcr.io/bula21/mova21-smssender/smssender:latest
+      -
+        name: Push docker
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          target: smssender-deploy
+          tags: |
+            ghcr.io/bula21/mova21-smssender/smssender:latest
