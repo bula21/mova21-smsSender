@@ -15,12 +15,12 @@ export default function Home() {
       </Head>
 
       <main>
-        <LoginButton/>
+        <LoginButton />
         <h1 className={styles.title}>
           SMS Sender
         </h1>
 
-        <Send/>
+        <Send />
       </main>
 
       <footer>
