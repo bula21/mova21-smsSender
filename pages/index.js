@@ -1,10 +1,13 @@
 import Head from 'next/head'
 import styles from './index.module.css'
 
+import { useSession } from "next-auth/react"
 import Send from '../components/send'
 import LoginButton from '../components/loginButton'
 
 export default function Home() {
+  const { data: session }= useSession()
+
   return (
     <div className={styles.container}>
       <Head>
@@ -20,7 +23,12 @@ export default function Home() {
           SMS Sender
         </h1>
 
-        <Send />
+
+        { session.user?.roles?.includes('Sender') ? (
+          <Send />
+        ): (
+          <p>You are not authorized to send messages</p>
+        ) }
       </main>
 
       <footer>
