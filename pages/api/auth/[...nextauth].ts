@@ -19,6 +19,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, token }) {
       if (token?.roles && session?.user) {
+        // @ts-ignore
         session.user.roles = token.roles
       }
 
@@ -27,6 +28,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, account }) {
       if (account?.access_token) {
         const decoded = jwt_decode(account.access_token);
+        // @ts-ignore
         token.roles = decoded?.resource_access?.smssender?.roles
       }
 

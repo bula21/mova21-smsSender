@@ -6,7 +6,9 @@ const smtpOptions: SMTPTransport = {
 	port: process.env.SMTP_PORT,
 	host: process.env.SMTP_HOST,
 	auth: {
+		// @ts-ignore
 		user: process.env.SMTP_USER || '',
+		// @ts-ignore
 		pass: process.env.SMTP_PASSWORD || '',
 	},
 	secure: false,
