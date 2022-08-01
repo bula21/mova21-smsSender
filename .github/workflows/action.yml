@@ -42,7 +42,6 @@ jobs:
             type=ref,event=tag,enable=${{ github.event.ref_type == 'tag' }}
           flavor: |
             latest=false
-            suffix=-${{ github.event.ref_type == 'tag' && 'mova21-smssender' || format('{0}-development', 'mova21-smssender') }},onlatest=true
       -
         name: Build docker
         uses: docker/build-push-action@v3
