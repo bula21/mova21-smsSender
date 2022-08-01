@@ -43,16 +43,7 @@ jobs:
           flavor: |
             latest=false
             suffix=-${{ github.event.ref_type == 'tag' && 'mova21-smssender' || format('{0}-development', 'mova21-smssender') }},onlatest=true
-      - 
-        name: Build and push Docker image
-        uses: docker/build-push-action@v3
-        id: build-and-deploy
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-      - 
+      -
         name: Build docker
         uses: docker/build-push-action@v3
         with:
@@ -66,5 +57,5 @@ jobs:
         with:
           push: true
           target: smssender-deploy
-          tags: |
-            ghcr.io/bula21/mova21-smssender/smssender:latest
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
