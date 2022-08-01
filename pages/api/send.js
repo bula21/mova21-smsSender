@@ -58,7 +58,7 @@ let handler = async (req, res) => {
       const body = req.body
       let { phonenumbers, message } = body
 
-      writeLog(session.user.email, phonenumbers, message)
+      writeLog(session?.user.email, phonenumbers, message)
       console.log('Info: User: ' + session.user.email + ', Phonenumbers: ', phonenumbers + ', Message: ', message)
 
       if (!phonenumbers || !message) return res.status(400).json({ response: 'error', message: 'Please provide correct phonenumbers and Message' })

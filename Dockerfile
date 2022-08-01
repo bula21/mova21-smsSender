@@ -33,6 +33,7 @@ FROM smssender-base as smssender-deploy
 # Install app dependencies
 COPY . .
 RUN npm install
+RUN npm run build
 
 COPY ./docker/entrypoint.prod.sh /docker
 COPY ./docker/set_env_secrets.sh /docker

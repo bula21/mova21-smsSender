@@ -1,11 +1,8 @@
 import { useState } from 'react';
-import { useSession } from "next-auth/react"
 
 export default function Send() {
     const MAX_LENGTH = 160 - 27; // for sponsored by
     const MAX_LENGTH_RECIPIENTS = 250;
-
-    const { data: session } = useSession()
 
     const [phonenumbers, setPhonenumbers] = useState('');
     const [message, setMessage] = useState('');
@@ -26,7 +23,6 @@ export default function Send() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${session.token}`
                 },
                 body: JSONdata,
             }
