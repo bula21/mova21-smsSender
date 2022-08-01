@@ -42,7 +42,7 @@ jobs:
             type=ref,event=tag,enable=${{ github.event.ref_type == 'tag' }}
           flavor: |
             latest=false
-            suffix=-${{ github.event.ref_type == 'tag' && matrix.app_name || format('{0}-development', matrix.app_name) }},onlatest=true
+            suffix=-${{ github.event.ref_type == 'tag' && "mova21-smssender" || format('{0}-development', "mova21-smssender") }},onlatest=true
       - 
         name: Build and push Docker image
         uses: docker/build-push-action@v3
