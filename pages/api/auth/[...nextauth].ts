@@ -12,19 +12,19 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: "jwt"
-},
+  },
   theme: {
     colorScheme: "light",
   },
   callbacks: {
-    async session({ session, user, token }) {
+    async session({ session, token }) {
       if (token?.roles && session?.user) {
         session.user.roles = token.roles
       }
 
       return session
     },
-    async jwt({ token, user, account, profile, isNewUser, resource_access }) {
+    async jwt({ token, account }) {
       if (account?.access_token) {
         const decoded = jwt_decode(account.access_token);
         token.roles = decoded?.resource_access?.smssender?.roles
