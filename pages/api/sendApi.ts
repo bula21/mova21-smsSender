@@ -1,16 +1,14 @@
-import { unstable_getServerSession } from "next-auth/next"
 import { Message, validate, mapRecipients } from "../../model/Message"
-import { authOptions } from "./auth/[...nextauth]"
 import { send } from "../../services/mailer"
 import { log } from "../../model/LogEntry"
 
 const handler = async (req, res) => {
-  const session = await unstable_getServerSession(req, res, authOptions)
-  const email = session?.user?.email
+  const token = req.headers.authorization?.substring(7)
+  const group = (JSON.parse(process.env.SENDER_KEYS) || {})[token]
 
-  if (!email) return res.status(401).json({ response: 'error', message: 'Not signed in' })
+  if (!group) return res.status(401).json({ response: 'error', message: 'Not authenticated, please provide API key' })
 
-  const message: Message = { from: email, body: req.body.message, to: mapRecipients(req.body.phonenumbers) }
+  const message: Message = { from: group, body: req.body.message || "", to: mapRecipients(req.body.phonenumbers) }
   const validationResult = validate(message)
 
   if (!validationResult.ok) return res.status(400).json({ response: 'error', message: validationResult.message })

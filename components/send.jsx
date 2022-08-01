@@ -6,46 +6,40 @@ export default function Send() {
 
     const [phonenumbers, setPhonenumbers] = useState('');
     const [message, setMessage] = useState('');
-    const [error, setError] = useState('');
-    const [result, setResult] = useState('');
+    const [result, setResult] = useState({ error: false, message: '' });
+
+    console.count('render')
 
     const handleSubmit = async (event) => {
-        if (phonenumbers.split(',').length < MAX_LENGTH_RECIPIENTS) {
-            event.preventDefault()
+        event.preventDefault()
 
-            const data = {
-                phonenumbers: phonenumbers,
-                message: message,
-            }
-            const JSONdata = JSON.stringify(data)
-            const endpoint = '/api/send'
-            const options = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSONdata,
-            }
+        const data = {
+            phonenumbers: phonenumbers,
+            message: message,
+        }
+        const JSONdata = JSON.stringify(data)
+        const endpoint = '/api/send'
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSONdata,
+        }
 
-            try {
-                const response = await fetch(endpoint, options)
-                const json = await response.json()
-                if (json.response === 'success') {
-                    setError(false)
-                    setResult('Message sent!')
+        try {
+            const response = await fetch(endpoint, options)
+            const json = await response.json()
+            if (json.response === 'success') {
+                setResult({error: false, message: 'Message sent!'})
 
-                    setPhonenumbers('')
-                    setMessage('')
-                } else {
-                    setError(true)
-                    setResult('Error sending message!')
-                }
-            } catch (error) {
-                console.log(error)
+                setPhonenumbers('')
+                setMessage('')
+            } else {
+                setResult({error: true, message: "Error sending message"})
             }
-        } else {
-            setError(true)
-            setResult('Error too many Recepients max allowed ' + MAX_LENGTH_RECIPIENTS + '!')
+        } catch (error) {
+            console.log(error)
         }
     }
 
@@ -53,12 +47,14 @@ export default function Send() {
         const { name, value } = event.target
         if (name === 'phonenumbers') {
             setPhonenumbers(value)
+            if (value.split(',').length >= MAX_LENGTH_RECIPIENTS) {
+                return setResult({error: true, message: `Max ${MAX_LENGTH_RECIPIENTS} recipients`})
+            } else {
+                return setResult({error: false, message: ''})
+            }
         } else if (name === 'message') {
             setMessage(value)
         }
-
-        setError(false)
-        setResult('')
     }
 
     return (
@@ -79,8 +75,8 @@ export default function Send() {
                 </form>
             </div>
             <div className="row mt-3">
-                {error && <div className="alert alert-danger" role="alert">{result}</div>}
-                {!error && result.length > 0  && <div className="alert alert-success" role="alert">{result}</div>}
+                {result.error && <div className="alert alert-danger" role="alert">{result.message}</div>}
+                {!result.error && result.message.length > 0  && <div className="alert alert-success" role="alert">{result.message}</div>}
             </div>
         </div>
     )

@@ -17,7 +17,7 @@ export function send(message: Message) {
 	return new Promise((resolve, reject) => {
 		nodemailer.createTransport(smtpOptions).sendMail({
 			from: smtpOptions.auth.user,
-			to: "james.levell@bula21.ch",
+			to: message.to,
 			subject: "",
 			text: message.body + " - " + SPONSORED_BY,
 		}, (err, info) => {

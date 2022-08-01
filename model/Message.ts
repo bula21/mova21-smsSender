@@ -4,8 +4,14 @@ export type Message = {
 	body: string;
 }
 
+const SMS_DOMAIN = process.env.SMS_DOMAIN
+
 const MAX_LENGTH = 160
 const MAX_LENGTH_RECIPIENTS = 250
+
+export function mapRecipients(phonenumbers?: string): string[] {
+	return phonenumbers?.split(',')?.map(number => `${number.replace(/\s/g, "")}@${SMS_DOMAIN}`) || []
+}
 
 export function validate(message: Message) {
 	if (message.body.length >= MAX_LENGTH)
