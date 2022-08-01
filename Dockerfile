@@ -18,6 +18,7 @@ FROM smssender-base as smssender-dev
 
 RUN mkdir -p /docker
 COPY ./docker/entrypoint.sh /docker
+RUN apt-get install git gnupg openssh-client -y
 RUN chmod +x /docker/entrypoint.sh
 RUN dos2unix /docker/entrypoint.sh
 
