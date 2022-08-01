@@ -33,13 +33,33 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       -
+        name: Extract metadata (tags, labels) for Docker
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest,enable=true
+            type=ref,event=tag,enable=${{ github.event.ref_type == 'tag' }}
+          flavor: |
+            latest=false
+            suffix=-${{ github.event.ref_type == 'tag' && matrix.app_name || format('{0}-development', matrix.app_name) }},onlatest=true
+      - 
+        name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        id: build-and-deploy
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - 
         name: Build docker
         uses: docker/build-push-action@v3
         with:
           target: smssender-deploy
           load: true
-          tags: |
-            ghcr.io/bula21/mova21-smssender/smssender:latest
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
       -
         name: Push docker
         uses: docker/build-push-action@v3
