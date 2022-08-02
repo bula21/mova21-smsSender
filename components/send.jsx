@@ -4,6 +4,7 @@ export default function Send() {
     const MAX_LENGTH = 160 - 27; // for sponsored by
     const MAX_LENGTH_RECIPIENTS = 250;
 
+    const [loading, setLoading] = useState();
     const [phonenumbers, setPhonenumbers] = useState('');
     const [message, setMessage] = useState('');
     const [result, setResult] = useState({ error: false, message: '' });
@@ -35,14 +36,17 @@ export default function Send() {
         }
 
         try {
+            setLoading(true)
             const response = await fetch(endpoint, options)
             const json = await response.json()
             if (json.response === 'success') {
                 setResult({error: false, message: 'Message sent!'})
 
+                setLoading(false)
                 setPhonenumbers('')
                 setMessage('')
             } else {
+                setLoading(false)
                 setResult({error: true, message: "Error sending message"})
             }
         } catch (error) {
@@ -77,7 +81,7 @@ export default function Send() {
                         <textarea className="form-control" id="message" name="message" rows="3" value={message} onChange={onChange} maxLength={MAX_LENGTH} required></textarea>
                     </div>
                     <div className="form-group mt-3">
-                        <button type="submit" className="btn btn-primary">Send SMS</button>
+                        <button type="submit" className="btn btn-primary" disabled={loading}>{ loading ? 'sending...' : 'Send SMS'}</button>
                     </div>
                 </form>
             </div>
