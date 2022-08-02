@@ -3,7 +3,7 @@ import styles from './index.module.css'
 
 import { useSession } from "next-auth/react"
 import Send from '../components/send'
-import LoginButton from '../components/loginButton'
+import NavBar from '../components/navbar'
 
 export default function Home() {
   const { data: session }= useSession()
@@ -18,7 +18,8 @@ export default function Home() {
       </Head>
 
       <main>
-        <LoginButton />
+        <NavBar />
+
         <h1 className={styles.title}>
           SMS Sender
         </h1>

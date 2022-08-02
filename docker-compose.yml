@@ -1,8 +1,9 @@
-version: '3.8'
+version: '3.9'
 services:
   smssender:
     build:
       target: smssender-dev
+      context: .
       dockerfile: Dockerfile
     user: "${UID:-0}:${GID:-0}"
     ports:

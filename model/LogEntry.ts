@@ -25,3 +25,8 @@ export async function log(message: Message) {
     message: message.body,
   }).save()
 }
+
+export async function getLogs() {
+  await db;
+  return LogEntry.find({}).sort({ createdAt: -1 });
+}

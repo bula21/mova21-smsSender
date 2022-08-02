@@ -8,8 +8,6 @@ export default function Send() {
     const [message, setMessage] = useState('');
     const [result, setResult] = useState({ error: false, message: '' });
 
-    console.count('render')
-
     const handleSubmit = async (event) => {
         event.preventDefault()
 
