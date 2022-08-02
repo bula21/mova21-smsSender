@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Send() {
     const MAX_LENGTH = 160 - 27; // for sponsored by
@@ -8,7 +8,14 @@ export default function Send() {
     const [message, setMessage] = useState('');
     const [result, setResult] = useState({ error: false, message: '' });
 
-    console.count('render')
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const phonenumbers = urlParams.get('phonenumbers');
+        const message = urlParams.get('message');
+
+        if (phonenumbers) setPhonenumbers(phonenumbers);
+        if (message) setMessage(message);
+    })
 
     const handleSubmit = async (event) => {
         event.preventDefault()

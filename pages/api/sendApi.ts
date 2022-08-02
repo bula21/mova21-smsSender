@@ -1,6 +1,7 @@
 import { Message, validate, mapRecipients } from "../../model/Message"
 import { send } from "../../services/mailer"
 import { log } from "../../model/LogEntry"
+import logger from "../../services/logger"
 
 const handler = async (req, res) => {
   const token = req.headers.authorization?.substring(7)
@@ -16,11 +17,11 @@ const handler = async (req, res) => {
   try {
     await send(message)
     await log(message)
-    console.log("Info: Message sent")
+    logger.info("Info: Message sent")
     res.status(200).json({ response: 'success', message: 'Message sent successful' })
   }
   catch (ex) {
-    console.error("Error: " + ex)
+    logger.error(ex)
     res.status(500).json({ response: 'error', message: ex })
   }
 }

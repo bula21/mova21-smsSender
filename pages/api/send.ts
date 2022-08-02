@@ -3,6 +3,7 @@ import { Message, validate, mapRecipients } from "../../model/Message"
 import { authOptions } from "./auth/[...nextauth]"
 import { send } from "../../services/mailer"
 import { log } from "../../model/LogEntry"
+import logger from "../../services/logger"
 
 const handler = async (req, res) => {
   const session = await unstable_getServerSession(req, res, authOptions)
@@ -18,11 +19,11 @@ const handler = async (req, res) => {
   try {
     await send(message)
     await log(message)
-    console.log("Info: Message sent")
+    logger.info("Message sent")
     res.status(200).json({ response: 'success', message: 'Message sent successful' })
   }
   catch (ex) {
-    console.error("Error: " + ex)
+    logger.error(ex)
     res.status(500).json({ response: 'error', message: ex })
   }
 }
