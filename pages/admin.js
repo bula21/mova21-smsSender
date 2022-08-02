@@ -13,7 +13,7 @@ export default function Admin() {
             { session?.user?.roles?.includes('Admin') ? (
                 <Log />
             ): (
-                <p>You are not authorized to send messages</p>
+                <p>You are not authorized to view logs</p>
             ) }
         </Layout>
     )
