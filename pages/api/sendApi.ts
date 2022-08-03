@@ -1,5 +1,5 @@
 import { Message, validate, mapRecipients } from "../../model/Message"
-import { send } from "../../services/mailer"
+import { process } from "../../services/sender"
 import { log } from "../../model/LogEntry"
 import logger from "../../services/logger"
 
@@ -15,7 +15,7 @@ const handler = async (req, res) => {
   if (!validationResult.ok) return res.status(400).json({ response: 'error', message: validationResult.message })
 
   try {
-    await send(message)
+    await process(message)
     await log(message)
     logger.info("Info: Message sent")
     res.status(200).json({ response: 'success', message: 'Message sent successful' })

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 export default function Send() {
-    const MAX_LENGTH = 160 - 27; // for sponsored by
+    const MAX_LENGTH = 999 // for sponsored by
     const MAX_LENGTH_RECIPIENTS = 250;
 
     const [loading, setLoading] = useState();
@@ -40,14 +40,14 @@ export default function Send() {
             const response = await fetch(endpoint, options)
             const json = await response.json()
             if (json.response === 'success') {
-                setResult({error: false, message: 'Message sent!'})
+                setResult({ error: false, message: 'Message sent!' })
 
                 setLoading(false)
                 setPhonenumbers('')
                 setMessage('')
             } else {
                 setLoading(false)
-                setResult({error: true, message: "Error sending message"})
+                setResult({ error: true, message: "Error sending message" })
             }
         } catch (error) {
             console.log(error)
@@ -59,9 +59,9 @@ export default function Send() {
         if (name === 'phonenumbers') {
             setPhonenumbers(value)
             if (value.split(',').length >= MAX_LENGTH_RECIPIENTS) {
-                return setResult({error: true, message: `Max ${MAX_LENGTH_RECIPIENTS} recipients`})
+                return setResult({ error: true, message: `Max ${MAX_LENGTH_RECIPIENTS} recipients` })
             } else {
-                return setResult({error: false, message: ''})
+                return setResult({ error: false, message: '' })
             }
         } else if (name === 'message') {
             setMessage(value)
@@ -81,13 +81,13 @@ export default function Send() {
                         <textarea className="form-control" id="message" name="message" rows="3" value={message} onChange={onChange} maxLength={MAX_LENGTH} required></textarea>
                     </div>
                     <div className="form-group mt-3">
-                        <button type="submit" className="btn btn-primary" disabled={loading}>{ loading ? 'sending...' : 'Send SMS'}</button>
+                        <button type="submit" className="btn btn-primary" disabled={loading}>{loading ? 'sending...' : 'Send SMS'}</button>
                     </div>
                 </form>
             </div>
             <div className="row mt-3">
                 {result.error && <div className="alert alert-danger" role="alert">{result.message}</div>}
-                {!result.error && result.message.length > 0  && <div className="alert alert-success" role="alert">{result.message}</div>}
+                {!result.error && result.message.length > 0 && <div className="alert alert-success" role="alert">{result.message}</div>}
             </div>
         </div>
     )

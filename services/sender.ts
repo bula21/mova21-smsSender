@@ -15,6 +15,25 @@ const smtpOptions: SMTPTransport = {
 }
 const SPONSORED_BY = process.env.SPONSORED_BY || ''
 
+function split(message: Message): Message[] {
+	const chunkSize = 175
+	const chunkAmount = Math.ceil(message.body.length + SPONSORED_BY.length) / chunkSize
+	const chunks = new Array(chunkAmount)
+	if (chunkAmount > 10) return []
+
+	for (let i = 0, char = 0; i < chunkAmount; i++, char += chunkSize) {
+		let body = `${message.body.substring(char, chunkSize)} ${i + 1}/${chunkAmount}`
+		if (i == chunkAmount - 1) body += SPONSORED_BY
+		chunks[i] = { ...message, body }
+	}
+
+	return chunks
+}
+
+export function process(message: Message) {
+	return Promise.all(split(message).map(messagePart => send(messagePart)));
+}
+
 export function send(message: Message) {
 	return new Promise((resolve, reject) => {
 		nodemailer.createTransport(smtpOptions).sendMail({
