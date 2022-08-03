@@ -6,7 +6,7 @@ export type Message = {
 
 const SMS_DOMAIN = process.env.SMS_DOMAIN
 
-const MAX_LENGTH = 160
+const MAX_LENGTH = 160 * 6
 const MAX_LENGTH_RECIPIENTS = 250
 
 export function mapRecipients(phonenumbers?: string): string[] {
