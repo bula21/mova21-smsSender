@@ -30,11 +30,13 @@ function split(message: Message): Message[] {
 	return chunks
 }
 
-export function process(message: Message) {
-	return Promise.all(split(message).map(messagePart => send(messagePart)));
+export async function processMessage(message: Message) {
+	for (const messagePart of split(message)) {
+		await sendMessage(messagePart)
+	}
 }
 
-export function send(message: Message) {
+export function sendMessage(message: Message) {
 	return new Promise((resolve, reject) => {
 		nodemailer.createTransport(smtpOptions).sendMail({
 			from: smtpOptions.auth.user,
