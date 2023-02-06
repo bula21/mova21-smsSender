@@ -49,7 +49,7 @@ jobs:
       -
         name: Build docker
         id: build-docker
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           target: smssender-deploy
           load: true
@@ -57,7 +57,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
       -
         name: Push docker
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           push: true
           target: smssender-deploy
